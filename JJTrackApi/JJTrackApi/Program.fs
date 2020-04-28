@@ -18,6 +18,7 @@ let app =
                 POST >=> request TestController.createTest
             ]
             fullController "/members" MemberController.definition
+            fullController "/comp" CompetitionController.definition
         ] >=> Writers.setMimeType "application/json; charset=utf-8"
         NOT_FOUND "NOT FOUND"
     ]
