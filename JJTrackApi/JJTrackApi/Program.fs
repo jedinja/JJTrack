@@ -3,6 +3,7 @@ open Suave.RequestErrors
 open Suave.Filters
 open Suave.Operators
 open JJTrackApi
+open RouteController
 
 let myCfg =
     { defaultConfig with
@@ -16,18 +17,7 @@ let app =
                 GET >=> context TestController.getAllTests
                 POST >=> request TestController.createTest
             ]
-//            path "/ingredients" >=> choose [
-//                GET >=> context IngredientController.getAllIngredients
-//                POST >=> request IngredientController.createIngredient
-//            ]
-//            pathStarts "/recipes" >=> choose [
-//                GET >=> choose [
-//                    pathScan "/recipes/%i" RecipeController.getRecipe
-//                    pathScan "/recipes/page/%i" RecipeController.getRecipesFromPage
-//                ]
-//                POST >=> request RecipeController.createRecipe
-//            ]
-
+            fullController "/members" MemberController.definition
         ] >=> Writers.setMimeType "application/json; charset=utf-8"
         NOT_FOUND "NOT FOUND"
     ]

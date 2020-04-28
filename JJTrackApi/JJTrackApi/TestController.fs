@@ -5,14 +5,14 @@ open Models
 
 let private _createTest =
     Test.create >>
-    Middlewares.JSON
+    Mid.JSON
 
 let createTest =
-    Middlewares.requestBody >>
+    Mid.requestBody >>
     Serializer.deserialize<TestModel> >>
     _createTest
 
 let getAllTests =
-    Middlewares.noFilter >>
+    Mid.noFilter >>
     Test.all >>
-    Middlewares.JSON
+    Mid.JSON
