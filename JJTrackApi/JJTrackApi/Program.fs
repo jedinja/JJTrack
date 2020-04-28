@@ -19,6 +19,7 @@ let app =
             ]
             fullController "/members" MemberController.definition
             fullController "/comp" CompetitionController.definition
+            fullController "/points" RecordController.definition
         ] >=> Writers.setMimeType "application/json; charset=utf-8"
         NOT_FOUND "NOT FOUND"
     ]

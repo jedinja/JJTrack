@@ -13,6 +13,7 @@
         <Compile Include="TestController.fs" />
         <Compile Include="MemberController.fs" />
         <Compile Include="CompetitionController.fs" />
+        <Compile Include="RecordController.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
