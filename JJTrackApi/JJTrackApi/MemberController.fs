@@ -27,6 +27,9 @@ let private transformMember (mem: Carrier.Carrier<MemberModel>, (update: MemberF
                 Active = update.Active
     }
 
+let private deleteCompetitionRecords memberId =
+    ModelServices.deleteRecords (fun record -> record.MemberId = memberId)
+
 let private createMember =
     Mid.requestBody >>
     Serializer.deserialize<NewMember> >>
@@ -46,7 +49,7 @@ let private updateMember = // id * body -> WebPart
     Mid.JSON
     
 let private deleteMember =
-    Mid.pass (fun a -> ()) >>
+    Mid.pass (deleteCompetitionRecords) >>
     Member.delete >>
     Mid.fromUnit (Successful.OK "OK")
     
