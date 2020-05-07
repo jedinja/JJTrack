@@ -8,10 +8,10 @@ class ClickDataMod extends UrbanTableMod {
 	}
 }
 
-export default ClickDataMod;
-
-export class ClickDataWhenValueMod extends UrbanTableMod {
-	constructor(columns, filter, clickAction) {
-		super(Targets.DATA_CELL, item => columns.indexOf(item.columnId) > -1 && filter(item), 'clickable', clickAction);
+export class ClickHeaderMod extends UrbanTableMod {
+	constructor(columns, clickAction) {
+		super(Targets.HEADER_CELL, { columnId: [].concat(columns) }, 'clickable', clickAction);
 	}
 }
+
+export default ClickDataMod;

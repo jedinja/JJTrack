@@ -8,7 +8,7 @@ open Carrier
 
 let private deserialize = Serializer.deserialize<CompetitionRecordModel>
 
-type private ToUpdate = {
+type ToUpdate = {
     Points: int
 }
 

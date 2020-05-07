@@ -72,6 +72,8 @@
 			outline: none;
 			border-radius: 5px;
 			transition: all linear .3s;
+			box-sizing: content-box;
+			background-color: white;
 
 			&:focus {
 				border-color: $main-color;

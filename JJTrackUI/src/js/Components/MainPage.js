@@ -3,7 +3,7 @@ import UrbanTable from '../TableV2/UrbanTable';
 
 import { connect } from 'react-redux';
 import {
-	LOAD_MEMBERS, act, ADD_MEMBER, ADD_COMPETITIOIN, LOAD_COMPETITION,
+	LOAD_MEMBERS, act, ADD_MEMBER, ADD_COMPETITIOIN, LOAD_COMPETITION, LOAD_RECORD, UPDATE_MEMBER, UPDATE_COMPETITIOIN,
 } from '../Actions/ActionNames';
 import {history} from '../Routing/History';
 import {Routes} from '../Routing/Routes';
@@ -12,10 +12,10 @@ import {PickPopup, Transfer} from './PickPopup';
 import {NewMemberPopupContent} from './NewMemberPopupContent';
 import {MemberClient} from '../Rest/MemberClient';
 import {
-	_id, _recProp,
+	_id, _rec, _recProp,
 	chainSorting,
 	DESC,
-	emptyGrid,
+	emptyGrid, fromGroup,
 	gridRow,
 	recSort,
 	recStringSort,
@@ -25,6 +25,12 @@ import {CompetitionClient} from '../Rest/CompetitionClient';
 import DateMod from '../TableV2/Mods/DateMod';
 import TimeMod from '../TableV2/Mods/TimeMod';
 import BlurColorTextMod from '../TableV2/Mods/BlurColorTextMod';
+import {RecordClient} from '../Rest/RecordClient';
+import {MiddleAlignMod} from '../TableV2/Mods/MiddleAlignMod';
+import ClickDataMod, {ClickHeaderMod} from '../TableV2/Mods/ClickDataMod';
+import {UpdateMemberPopupContent} from './UpdateMemberPopupContent';
+import {InactiveColumnMod} from '../TableV2/Mods/InactiveColumnMod';
+import {UpdateCompetitionPopupContent} from './UpdateCompetitionPopupContent';
 
 const CLM_COMPETITION = 'CLM_COMPETITION';
 
@@ -35,6 +41,10 @@ class mainPage extends React.Component {
 
 		this.state = {
 			gridSource: emptyGrid(),
+			showUpdateMember: false,
+			updatingMember: null,
+			showUpdateComp: false,
+			updatingComp: null,
 		};
 	}
 
@@ -43,7 +53,10 @@ class mainPage extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps, nextContext) {
-		if(nextProps.members !== this.props.members || this.props.competitions !== nextProps.competitions) {
+		if(nextProps.members !== this.props.members ||
+			this.props.competitions !== nextProps.competitions ||
+			this.props.records !== nextProps.records)
+		{
 			this.generateGridSource(nextProps);
 		}
 	}
@@ -61,19 +74,73 @@ class mainPage extends React.Component {
 				new DateMod(CLM_COMPETITION, 0),
 				new TimeMod(CLM_COMPETITION, 1),
 				new BlurColorTextMod(CLM_COMPETITION, 1),
+				new MiddleAlignMod(orderedMembers.map(_id)),
+				new ClickHeaderMod(orderedMembers.map(_id), this.onMemberClick),
+				new InactiveColumnMod(orderedMembers.filter(mem => _recProp('Active')(mem) === false).map(_id)),
+				new ClickDataMod(CLM_COMPETITION, this.onCompClick),
 			],
 			data: orderedCompetitions.map(comp => gridRow(_id(comp), [
-				[_recProp('EventDate')(comp), _recProp('Duration')(comp)]
+				[_recProp('EventDate')(comp), _recProp('Duration')(comp)],
+				...orderedMembers.map(member => fromGroup(props.records, [
+					_id(comp), _id(member), 0, _rec, 'Points'
+				], '---'))
 			]))
 		}});
 	}
 
+	onMemberClick = cell => this.setState({
+		showUpdateMember: true,
+		updatingMember: cell.columnId,
+	});
+
+	onCompClick = cell => this.setState({
+		showUpdateComp: true,
+		updatingComp: cell.rowId,
+	});
+
 	render() {
-		const { gridSource } = this.state;
-		const { addMember, addCompetition } = this.props;
+		const { gridSource, showUpdateMember, updatingMember, showUpdateComp, updatingComp } = this.state;
+		const { addMember, updateMember, addCompetition, updateCompetition, members, competitions } = this.props;
+
+		let member = showUpdateMember && members.find(m => _id(m) === updatingMember);
+		let comp = showUpdateComp && competitions.find(c => _id(c) === updatingComp);
 
 		return (
 			<div className="main-page">
+				{
+					showUpdateMember && (
+						<PickPopup
+							trigger={<a/>}
+							onClose={() => this.setState({ showUpdateMember: false, updatingMember: null})}
+							open={true}
+							popupContent={
+								Transfer({
+									update: updateMember.bind(this, updatingMember),
+									name: _recProp('Name')(member),
+									active: _recProp('Active')(member)
+								}, UpdateMemberPopupContent)
+							}
+						/>
+					)
+				}
+				{
+					showUpdateComp && (
+						<PickPopup
+							trigger={<a/>}
+							onClose={() => this.setState({ showUpdateComp: false, updatingComp: null})}
+							open={true}
+							popupContent={
+								Transfer({
+									update: updateCompetition.bind(this, updatingComp),
+									name: _recProp('Name')(comp),
+									eventDate: _recProp('EventDate')(comp),
+									duration: _recProp('Duration')(comp),
+								}, UpdateCompetitionPopupContent)
+							}
+						/>
+					)
+				}
+
 				<div className="menu">
 					<PickPopup
 						trigger={
@@ -105,6 +172,7 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		members: state.members,
 		competitions: state.competitions,
+		records: state.records,
 	};
 };
 
@@ -113,9 +181,12 @@ const mapDispatchToProps = dispatch => {
 		load: () => Promise.all([
 			MemberClient.get('').then(data => dispatch(act(LOAD_MEMBERS, data))),
 			CompetitionClient.get('').then(data => dispatch(act(LOAD_COMPETITION, data))),
+			RecordClient.get('').then(data => dispatch(act(LOAD_RECORD, data))),
 		]),
 		addMember: Name => MemberClient.post({ Name }).then(data => dispatch(act(ADD_MEMBER, data))),
+		updateMember: (id, Name, Active) => MemberClient.put({ Name, Active }, id).then(data => dispatch(act(UPDATE_MEMBER, data))),
 		addCompetition: (Name, EventDate, DUration) => CompetitionClient.post({ Name, EventDate, DUration }).then(data => dispatch(act(ADD_COMPETITIOIN, data))),
+		updateCompetition: (id, Name, EventDate, DUration) => CompetitionClient.put({ Name, EventDate, DUration }, id).then(data => dispatch(act(UPDATE_COMPETITIOIN, data))),
 	};
 };
 

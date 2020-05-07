@@ -3,8 +3,7 @@ import * as Targets from '../Modding/ModTargets';
 import UrbanTableMod from '../Modding/UrbanTableMod';
 import React from 'react';
 import DataCellValue from '../DataCellValue';
-import {PickPopup} from '../../Components/Modals/PickPopup';
-import {Transfer} from '../../Components/HOCs/Transfer';
+import {PickPopup, Transfer} from '../../Components/PickPopup';
 
 class TransferClick extends React.Component {
 	render () {

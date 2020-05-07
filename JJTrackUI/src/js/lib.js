@@ -43,3 +43,46 @@ export function gridRow (id, array) {
 	array.rowId = id;
 	return array;
 }
+
+export function group (array, levelFunctions, initial = {}) {
+	let lv = [].concat(levelFunctions);
+	return array.reduce((acc, item) => {
+		let currentLevel = acc;
+		for(let i = 0; i < lv.length; i++) {
+			let key = lv[i](item);
+			if(!currentLevel[key]) {
+				currentLevel[key] = {};
+			}
+			currentLevel = currentLevel[key];
+		}
+		if(!currentLevel.items) {
+			currentLevel.items = [];
+		}
+		currentLevel.items.push(item);
+		return acc;
+	}, initial);
+}
+
+export function fromGroup (group, keys, defa = null) {
+	if(keys.length === 0) {
+		return group;
+	}
+
+	let nextKey = keys[0];
+	let next = typeof nextKey === 'function' ? group[nextKey(group)] : group[keys[0]]
+
+	return next ? fromGroup(next, keys.shift(), defa) : defa;
+}
+
+export const selectItems = array => {
+	let res = [];
+
+	for(let i = 0; i< array.length; i+=2) {
+		res.push({
+			text: array[i],
+			value: array[i+1],
+		})
+	}
+
+	return res;
+}

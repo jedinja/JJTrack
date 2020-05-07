@@ -10,7 +10,7 @@ type NewMember = {
     Name: string
 }
 
-type private MemberForUpdate = {
+type MemberForUpdate = {
     Name: string
     Active: Boolean
 }

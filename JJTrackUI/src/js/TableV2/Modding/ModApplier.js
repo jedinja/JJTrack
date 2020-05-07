@@ -135,7 +135,7 @@ class ModApplier {
 	generateRow(sourceRow, rowIndex, mods, modTargets) {
 
 		let row = [];
-		row.rowKey = sourceRow.rowId || rowIndex;
+		row.rowKey = sourceRow.rowId;
 		row.index = rowIndex;
 
 		let rowMods = this.getMods(mods, modTargets, row);

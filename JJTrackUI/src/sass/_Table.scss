@@ -1,15 +1,25 @@
 @import "_Variables";
 .utable {
-	background-color: rgba($main-back-color, 0.9);
+	background-color: rgba($main-back-color, 0.95);
 	border-radius: $atom;
+	border: 1px solid $main-color;
 
 	.utable--header-container {
 		@include fancy-text;
 		font-size: 30px;
 	}
 
+	.utable--data-cell,
+	.utable--header-cell {
+		border: 1px solid transparent;
+	}
+
 	.utable--data-cell {
 		height: $module;
+
+		&:hover {
+			border: 1px solid $main-color-blur;
+		}
 	}
 
 	.utable--data-cell--value {
@@ -19,13 +29,10 @@
 	.utable--header-cell {
 		$header-padding: $atom * 4;
 		height: $module * 1.5;
-		padding: 0 $header-padding 0 $header-padding ;
-	}
+		padding: 0 $header-padding 0 $header-padding;
 
-	.utable--data-cell,
-	.utable--header-cell {
 		&:hover {
-			background-color: rgba($main-back-color, 0.8);
+			border: 1px solid $accent-color;
 		}
 	}
 }
@@ -35,5 +42,20 @@
 .utable {
 	.color-blur {
 		color: $main-color-blur;
+	}
+
+	.utable--data-cell.middle-align {
+		text-align: center;
+	}
+
+	.utable--data-cell,
+	.utable--header-cell {
+		&.clickable {
+			cursor: pointer;
+		}
+
+		&.inactive {
+			opacity: 0.3;
+		}
 	}
 }
