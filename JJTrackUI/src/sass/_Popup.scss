@@ -1,0 +1,115 @@
+@import "_Variables";
+.modal-popup-content-content {
+	position: relative!important;
+	background: transparent!important;
+	width: initial!important;
+	margin: auto!important;
+	border: 0 solid!important;
+	border-radius: 5px!important;
+
+	&.embed {
+		width: 100%!important;
+	}
+}
+
+.popup-frame {
+	border: black solid 50px;
+	background-color: transparent;
+	min-height: $module * 5;
+
+	border-image-source: $popup-frame;
+	border-image-slice: 17%;
+	border-image-outset: -20px;
+}
+
+.popup-frame-content {
+	$back: $main-back-color;
+	min-height: $module * 5;
+	min-width: $module * 7;
+	background-color: $back;
+	box-shadow: 0 0 0 17px $back;
+	border-radius: 14px;
+
+	display: flex;
+	flex-direction: column;
+
+	.popup-heading {
+		flex: 1;
+		font-size: 45px;
+		font-weight: 600;
+		display: flex;
+		color: $accent-color;
+		justify-content: center;
+		margin-bottom: $module;
+
+		.popup-heading-text {
+			font-family: 'Dancing Script', cursive;
+		}
+	}
+
+	.popup-input {
+		flex: 1;
+		display: flex;
+		line-height: $module;
+
+		.popup-input-text {
+			flex: 1;
+			padding-top: 3px;
+			margin-right: $atom * 4;
+		}
+
+		.popup-input-value {
+			flex: 3;
+			height: $module;
+			line-height: 40px;
+			font-size: $font-size;
+			//max-width: $module * 5;
+			color: $main-color;
+			padding-left: $atom * 2;
+			font-weight: 700;
+			border: $main-color-blur solid 2px;
+			outline: none;
+			border-radius: 5px;
+			transition: all linear .3s;
+
+			&:focus {
+				border-color: $main-color;
+				box-shadow: 0 0 5px $main-color;
+			}
+		}
+	}
+
+	.popup-row {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		margin-top: $module;
+
+		.popup-button {
+			border: $main-color-blur solid 1px;
+			outline: none;
+			border-radius: 25px;
+			transition: all linear .3s;
+			padding-left: $atom * 4;
+			padding-right: $atom * 4;
+			padding-top: 3px;
+			height: $module;
+			line-height: $module;
+			cursor: pointer;
+
+			$color1: greenyellow;
+			$color2: #41dc1a;
+			background-image: linear-gradient($color1, $color2);
+
+			&:hover {
+
+				$color1hover: lighten($color1, 10%);
+				$color2hover: lighten($color2, 10%);
+
+				border-color: $main-color;
+				box-shadow: 0 0 5px $main-color;
+				background-image: linear-gradient($color1hover, $color2hover);
+			}
+		}
+	}
+}

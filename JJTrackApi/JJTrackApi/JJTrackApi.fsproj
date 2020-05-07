@@ -25,6 +25,7 @@
     <ItemGroup>
       <PackageReference Include="EasySer" Version="1.0.0" />
       <PackageReference Include="easyserjson" Version="1.0.0" />
+      <PackageReference Include="FSharp.Data" Version="3.3.3" />
       <PackageReference Include="Suave" Version="2.5.6" />
     </ItemGroup>
 

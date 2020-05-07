@@ -1,5 +1,4 @@
 import * as Target from './ModTargets';
-import {HIDDEN_CLM} from '../../Libs/libs';
 /**
  * dataGrid is basic 2D grid with values and rowIds
  *

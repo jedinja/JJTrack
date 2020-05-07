@@ -6,7 +6,7 @@ open Models
 open Suave
 open RouteController
 
-type private NewMember = {
+type NewMember = {
     Name: string
 }
 

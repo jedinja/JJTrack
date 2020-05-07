@@ -2,7 +2,6 @@ import React from 'react';
 import TableView from './TableView';
 import ModApplier from './Modding/ModApplier';
 import PropTypes from 'prop-types';
-import {Pageable} from '../Components/HOCs/Pageable';
 
 class UrbanTable extends React.Component {
 	constructor(props) {
@@ -80,4 +79,3 @@ UrbanTable.propTypes = {
 };
 
 export default UrbanTable;
-export const PagedUrbanTable = Pageable(UrbanTable, 'data');

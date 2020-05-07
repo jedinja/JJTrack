@@ -1,15 +1,15 @@
 {
-	"name": "fincityui",
+	"name": "jjtrackui",
 	"version": "1.0.0",
-	"description": "fincityui app",
+	"description": "JJTrack app",
 	"main": "app.js",
 	"scripts": {
 		"deploy": "npm install && webpack --progress --colors --config webpack.prod.js --mode production",
 		"deploy-debug": "webpack --progress --colors --config webpack.dev.js --mode development",
-		"start": "npm prune && npm install && webpack-dev-server --progress --colors --port 8081 --config webpack.dev.js --mode development --watch-poll"
+		"start": "npm prune && npm install && webpack-dev-server --progress --colors --port 8082 --config webpack.dev.js --mode development --watch-poll"
 	},
 	"author": "Kiril Dolashkov",
-	"repository": "vps",
+	"repository": "github",
 	"license": "MIT",
 	"devDependencies": {
 		"babel-core": "*",

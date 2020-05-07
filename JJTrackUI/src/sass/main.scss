@@ -1,3 +1,25 @@
+@import "_Variables";
+
 body {
-	background-color: antiquewhite;
+	background-color: $main-back-color;
+	background-image: $body;
+
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
+	color: $main-color;
+	font-size: $font-size;
+}
+
+.main-page {
+	.add-member {
+		width: $module * 2;
+		height: $module * 2;
+
+		&:hover {
+			$border-color: #FFFFFF;
+			box-shadow: 0 0 5px 5px rgba($border-color, .5);
+			border-bottom: solid 1px $border-color;
+			cursor: pointer;
+		}
+	}
 }
