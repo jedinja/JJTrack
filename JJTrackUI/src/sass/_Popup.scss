@@ -25,7 +25,7 @@
 .popup-frame-content {
 	$back: $main-back-color;
 	min-height: $module * 5;
-	min-width: $module * 7;
+	min-width: $module * 14;
 	background-color: $back;
 	box-shadow: 0 0 0 17px $back;
 	border-radius: 14px;
@@ -38,12 +38,11 @@
 		font-size: 45px;
 		font-weight: 600;
 		display: flex;
-		color: $accent-color;
 		justify-content: center;
 		margin-bottom: $module;
 
 		.popup-heading-text {
-			font-family: 'Dancing Script', cursive;
+			@include fancy-text;
 		}
 	}
 
@@ -51,11 +50,13 @@
 		flex: 1;
 		display: flex;
 		line-height: $module;
+		margin-bottom: $atom * 2;
 
 		.popup-input-text {
 			flex: 1;
 			padding-top: 3px;
 			margin-right: $atom * 4;
+			white-space: nowrap;
 		}
 
 		.popup-input-value {

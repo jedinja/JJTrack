@@ -1,0 +1,39 @@
+@import "_Variables";
+.utable {
+	background-color: rgba($main-back-color, 0.9);
+	border-radius: $atom;
+
+	.utable--header-container {
+		@include fancy-text;
+		font-size: 30px;
+	}
+
+	.utable--data-cell {
+		height: $module;
+	}
+
+	.utable--data-cell--value {
+		padding-left: $atom;
+	}
+
+	.utable--header-cell {
+		$header-padding: $atom * 4;
+		height: $module * 1.5;
+		padding: 0 $header-padding 0 $header-padding ;
+	}
+
+	.utable--data-cell,
+	.utable--header-cell {
+		&:hover {
+			background-color: rgba($main-back-color, 0.8);
+		}
+	}
+}
+
+// MODS
+
+.utable {
+	.color-blur {
+		color: $main-color-blur;
+	}
+}
