@@ -8,8 +8,8 @@ open RouteController
 open FSharp.Data
 open Suave.Logging
 
-type Config = JsonProvider<""" { "port":1, "domain":"http://localhost:8082", "verbose":true } """>
-let config = Config.Parse """ { "port":3000, "domain":"http://localhost:8082", "verbose": true } """
+type Config = JsonProvider<""" { "port":1, "domain":"http://localhost:8082", "ip":"127.0.0.1", "verbose":true } """>
+let config = Config.Parse """ { "port":3000, "domain":"http://localhost:8082", "ip":"127.0.0.1", "verbose": true } """
 
 let getConfigFile configFile =
     match File.Exists configFile with
@@ -18,7 +18,7 @@ let getConfigFile configFile =
 
 let getCfg (configFile: Config.Root) =
     { defaultConfig with
-        bindings = [ HttpBinding.createSimple HTTP "127.0.0.1" configFile.Port ] }
+        bindings = [ HttpBinding.createSimple HTTP configFile.Ip configFile.Port ] }
 
 let addCors (conf: Config.Root) =
     Writers.addHeader "Access-Control-Allow-Origin" conf.Domain
