@@ -1,1 +1,1 @@
-tar -cvf JJTrackApi.tar.gz config.json EasySer.dll EasySerJson.dll JJTrackApi JJTrackApi.deps.json JJTrackApi.dll JJTrackApi.runtimeconfig.dev.json JJTrackApi.runtimeconfig.json Newtonsoft.Json.dll Suave.dll
+tar -cvf JJTrackApi.tar.gz config.json EasySer.dll EasySerJson.dll JJTrackApi JJTrackApi.deps.json JJTrackApi.dll JJTrackApi.runtimeconfig.dev.json JJTrackApi.runtimeconfig.json Newtonsoft.Json.dll Suave.dll FSharp.Core.dll FSharp.Data.dll
