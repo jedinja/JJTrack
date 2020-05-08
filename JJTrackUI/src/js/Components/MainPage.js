@@ -3,7 +3,15 @@ import UrbanTable from '../TableV2/UrbanTable';
 
 import { connect } from 'react-redux';
 import {
-	LOAD_MEMBERS, act, ADD_MEMBER, ADD_COMPETITIOIN, LOAD_COMPETITION, LOAD_RECORD, UPDATE_MEMBER, UPDATE_COMPETITIOIN,
+	LOAD_MEMBERS,
+	act,
+	ADD_MEMBER,
+	ADD_COMPETITIOIN,
+	LOAD_COMPETITION,
+	LOAD_RECORD,
+	UPDATE_MEMBER,
+	UPDATE_COMPETITIOIN,
+	ADD_RECORD, UPDATE_RECORD,
 } from '../Actions/ActionNames';
 import {history} from '../Routing/History';
 import {Routes} from '../Routing/Routes';
@@ -31,6 +39,7 @@ import ClickDataMod, {ClickHeaderMod} from '../TableV2/Mods/ClickDataMod';
 import {UpdateMemberPopupContent} from './UpdateMemberPopupContent';
 import {InactiveColumnMod} from '../TableV2/Mods/InactiveColumnMod';
 import {UpdateCompetitionPopupContent} from './UpdateCompetitionPopupContent';
+import {UpdatePointsPopupContent} from './UpdatePointsPopupContent';
 
 const CLM_COMPETITION = 'CLM_COMPETITION';
 
@@ -45,6 +54,9 @@ class mainPage extends React.Component {
 			updatingMember: null,
 			showUpdateComp: false,
 			updatingComp: null,
+			showUpdateRecor: false,
+			updatingRecordCompId: null,
+			updatingRecordMemId: null,
 		};
 	}
 
@@ -78,11 +90,12 @@ class mainPage extends React.Component {
 				new ClickHeaderMod(orderedMembers.map(_id), this.onMemberClick),
 				new InactiveColumnMod(orderedMembers.filter(mem => _recProp('Active')(mem) === false).map(_id)),
 				new ClickDataMod(CLM_COMPETITION, this.onCompClick),
+				new ClickDataMod(orderedMembers.map(_id), this.onRecordClick),
 			],
 			data: orderedCompetitions.map(comp => gridRow(_id(comp), [
 				[_recProp('EventDate')(comp), _recProp('Duration')(comp)],
 				...orderedMembers.map(member => fromGroup(props.records, [
-					_id(comp), _id(member), 0, _rec, 'Points'
+					_id(comp), _id(member), 'items', 0, _rec, 'Points'
 				], '---'))
 			]))
 		}});
@@ -98,15 +111,41 @@ class mainPage extends React.Component {
 		updatingComp: cell.rowId,
 	});
 
+	onRecordClick = cell => this.setState({
+		showUpdateRecor: true,
+		updatingRecordCompId: cell.rowId,
+		updatingRecordMemId: cell.columnId,
+	});
+
 	render() {
-		const { gridSource, showUpdateMember, updatingMember, showUpdateComp, updatingComp } = this.state;
-		const { addMember, updateMember, addCompetition, updateCompetition, members, competitions } = this.props;
+		const { gridSource, showUpdateMember, updatingMember, showUpdateComp, updatingComp, showUpdateRecor, updatingRecordCompId, updatingRecordMemId } = this.state;
+		const { addMember, updateMember, addCompetition, updateCompetition, members, competitions, records, addRecord, updateRecord } = this.props;
 
 		let member = showUpdateMember && members.find(m => _id(m) === updatingMember);
 		let comp = showUpdateComp && competitions.find(c => _id(c) === updatingComp);
+		let record = showUpdateRecor && fromGroup(records, [updatingRecordCompId, updatingRecordMemId, 'items', 0]);
 
 		return (
 			<div className="main-page">
+				{
+					showUpdateRecor && (
+						<PickPopup
+							trigger={<a/>}
+							onClose={() => this.setState({ showUpdateRecor: false, updatingRecordCompId: null, updatingRecordMemId: null})}
+							open={true}
+							popupContent={
+								Transfer(
+									record ? {
+										update: updateRecord.bind(this, _id(record)),
+										points: _recProp('Points')(record),
+									} : {
+										update: addRecord.bind(this, updatingRecordCompId, updatingRecordMemId),
+									}
+									, UpdatePointsPopupContent)
+							}
+						/>
+					)
+				}
 				{
 					showUpdateMember && (
 						<PickPopup
@@ -187,6 +226,8 @@ const mapDispatchToProps = dispatch => {
 		updateMember: (id, Name, Active) => MemberClient.put({ Name, Active }, id).then(data => dispatch(act(UPDATE_MEMBER, data))),
 		addCompetition: (Name, EventDate, DUration) => CompetitionClient.post({ Name, EventDate, DUration }).then(data => dispatch(act(ADD_COMPETITIOIN, data))),
 		updateCompetition: (id, Name, EventDate, DUration) => CompetitionClient.put({ Name, EventDate, DUration }, id).then(data => dispatch(act(UPDATE_COMPETITIOIN, data))),
+		addRecord: (CompetitionId, MemberId, Points) => RecordClient.post({ CompetitionId, MemberId, Points }).then(data => dispatch(act(ADD_RECORD, data))),
+		updateRecord: (id, Points) => RecordClient.put({ Points }, id).then(data => dispatch(act(UPDATE_RECORD, data))),
 	};
 };
 

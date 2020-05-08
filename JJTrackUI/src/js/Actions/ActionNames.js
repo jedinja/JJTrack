@@ -10,3 +10,4 @@ export const UPDATE_COMPETITIOIN = 'UPDATE_COMPETITIOIN';
 
 export const LOAD_RECORD = 'LOAD_RECORD';
 export const ADD_RECORD = 'ADD_RECORD';
+export const UPDATE_RECORD = 'UPDATE_RECORD';

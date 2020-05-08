@@ -60,7 +60,7 @@ export function group (array, levelFunctions, initial = {}) {
 		}
 		currentLevel.items.push(item);
 		return acc;
-	}, initial);
+	}, {...initial});
 }
 
 export function fromGroup (group, keys, defa = null) {
@@ -69,9 +69,9 @@ export function fromGroup (group, keys, defa = null) {
 	}
 
 	let nextKey = keys[0];
-	let next = typeof nextKey === 'function' ? group[nextKey(group)] : group[keys[0]]
+	let next = typeof nextKey === 'function' ? nextKey(group) : group[keys[0]]
 
-	return next ? fromGroup(next, keys.shift(), defa) : defa;
+	return next ? fromGroup(next, keys.slice(1), defa) : defa;
 }
 
 export const selectItems = array => {
