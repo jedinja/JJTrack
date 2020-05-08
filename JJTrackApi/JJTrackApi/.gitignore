@@ -2,3 +2,4 @@
 .idea/
 /bin/Debug/netcoreapp3.1/
 /obj/
+/bin/Release/netcoreapp3.1/
