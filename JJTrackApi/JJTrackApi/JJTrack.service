@@ -1,0 +1,16 @@
+[Unit]
+Description=JJTrack API
+
+[Service]
+WorkingDirectory=/disk2/storage/hosted/JJTrackApi
+ExecStart=/disk2/storage/hosted/JJTrackApi/JJTrackApi
+SyslogIdentifier=JJTrack
+
+User=store
+Group=store
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

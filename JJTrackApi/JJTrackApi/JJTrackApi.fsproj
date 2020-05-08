@@ -20,7 +20,8 @@
 
     <ItemGroup>
       <Content Include=".gitignore" />
-      <Content Include="DeployCommand" />
+      <Content Include="DeployCommand.sh" />
+      <Content Include="JJTrack.service" />
     </ItemGroup>
 
     <ItemGroup>
