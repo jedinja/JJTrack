@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <Content Include=".gitignore" />
+      <Content Include="DeployCommand" />
     </ItemGroup>
 
     <ItemGroup>

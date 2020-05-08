@@ -1,4 +1,5 @@
-﻿open Suave
+﻿open System.IO
+open Suave
 open Suave.RequestErrors
 open Suave.Filters
 open Suave.Operators
@@ -10,14 +11,17 @@ open Suave.Logging
 type Config = JsonProvider<""" { "port":1, "domain":"http://localhost:8082", "verbose":true } """>
 let config = Config.Parse """ { "port":3000, "domain":"http://localhost:8082", "verbose": true } """
 
-printfn "%A" config
+let getConfigFile configFile =
+    match File.Exists configFile with
+    | false -> config
+    | true -> File.ReadAllText configFile |> Config.Parse
 
-let myCfg =
+let getCfg (configFile: Config.Root) =
     { defaultConfig with
-        bindings = [ HttpBinding.createSimple HTTP "127.0.0.1" config.Port ] }
+        bindings = [ HttpBinding.createSimple HTTP "127.0.0.1" configFile.Port ] }
 
-let addCors =
-    Writers.addHeader "Access-Control-Allow-Origin" config.Domain
+let addCors (conf: Config.Root) =
+    Writers.addHeader "Access-Control-Allow-Origin" conf.Domain
     >=> Writers.addHeader "Access-Control-Allow-Headers" "Origin, X-Requested-With, Content-Type, Accept"
     >=> Writers.addHeader "Access-Control-Allow-Credentials" "true"
     >=> Writers.addHeader "Access-Control-Allow-Methods" "POST, GET, PUT, DELETE, PATCH, OPTIONS"
@@ -29,7 +33,7 @@ let logLevel =
 
 let logger = Targets.create logLevel [||]
 
-let app =
+let app configFile =
     choose [
         OPTIONS >=> Successful.OK ""
         pathStarts "/ok" >=> choose [
@@ -45,10 +49,11 @@ let app =
             fullController "/points" RecordController.definition
         ] >=> Writers.setMimeType "application/json; charset=utf-8"
         NOT_FOUND "NOT FOUND"
-    ] >=> logStructured logger logFormatStructured >=> addCors
+    ] >=> logStructured logger logFormatStructured >=> (addCors configFile)
 
 [<EntryPoint>]
 let main argv =
-
-    startWebServer myCfg app
+    let confFile = getConfigFile "./config.json"
+    printfn "%A" confFile
+    startWebServer (getCfg confFile) (app confFile)
     0
