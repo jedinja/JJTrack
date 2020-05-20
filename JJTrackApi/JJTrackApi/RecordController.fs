@@ -3,7 +3,8 @@ module JJTrackApi.RecordController
 open EasySerJson
 open Models
 open Suave
-open RouteController
+open EasyWebServer
+open EasyWebServer.RouteController
 open Carrier
 
 let private deserialize = Serializer.deserialize<CompetitionRecordModel>

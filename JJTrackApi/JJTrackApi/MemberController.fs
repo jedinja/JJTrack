@@ -4,7 +4,8 @@ open System
 open EasySerJson
 open Models
 open Suave
-open RouteController
+open EasyWebServer
+open EasyWebServer.RouteController
 
 type NewMember = {
     Name: string

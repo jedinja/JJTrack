@@ -2,6 +2,7 @@ module JJTrackApi.TestController
 
 open EasySerJson
 open Models
+open EasyWebServer
 
 let private _createTest =
     Test.create >>
